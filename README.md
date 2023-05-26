@@ -22,7 +22,7 @@ yarn add -D nodemon
 
 #### Copy File .env.example and rename .env
 
-#### Start the server locally at _localhost:8000_ using
+#### Start the server locally at _localhost:5000_ using
 
 ```bash
 yarn dev
