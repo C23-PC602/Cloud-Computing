@@ -33,3 +33,25 @@ Or
 ```bash
 npm dev
 ```
+
+## How To Test
+
+```bash
+After install and run server use npm and yarn
+```
+```sh
+> Create Database -> auth_db -> Import -> Done 
+```
+
+## Example test 
+```sh
+> Open postman -> POST -> raw -> JSON -> Enter Code
+{
+    "name": "testing",
+    "email": "coba@gmail",
+    "password": "tes",
+    "confPassword": "tes"
+}
+```
+
+
