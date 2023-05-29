@@ -4,17 +4,24 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import db from "./config/db.js";
 import router from "./routes/index.js";
+import bodyParser from "body-parser";
+// import Users from "./models/UserModel.js";
 dotenv.config();
 const app = express();
+// const app = express();
 
 try {
   await db.authenticate();
   console.log("Database Connected...");
+  // await Users.sync();
 } catch (error) {
   console.error(error);
 }
 
-app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+// app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+app.use(cors());
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.json());
 app.use(router);

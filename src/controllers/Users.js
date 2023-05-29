@@ -15,6 +15,8 @@ export const getUsers = async (req, res) => {
 
 export const Register = async (req, res) => {
   const { name, email, password, confPassword } = req.body;
+  // console.log(name);
+  // console.log("ok");
   if (password !== confPassword)
     return res
       .status(400)
