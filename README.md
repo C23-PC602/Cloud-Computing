@@ -1,3 +1,7 @@
+## Documentation
+
+https://documenter.getpostman.com/view/14589899/2s93m8yLLB
+
 ## How to install
 
 #### Fork and clone this repository using
