@@ -7,17 +7,16 @@ import router from "./routes/index.js";
 import bodyParser from "body-parser";
 
 // ini juga
-// import Users from "./models/UserModel.js";
+import Users from "./models/UserModel.js";
 dotenv.config();
 const app = express();
-// const app = express();
 
 try {
   await db.authenticate();
   console.log("Database Connected...");
 
   // aktifkan ini jika mau migrasi database
-  // await Users.sync();
+  await Users.sync();
 } catch (error) {
   console.error(error);
 }
