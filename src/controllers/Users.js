@@ -15,12 +15,20 @@ export const getUsers = async (req, res) => {
 
 export const Register = async (req, res) => {
   const { name, email, password, confPassword } = req.body;
-  // console.log(name);
-  // console.log("ok");
+  if (!email || !password) {
+    return res
+      .status(400)
+      .send({ message: "Email dan Password tidak boleh kosong" });
+  }
+  const userAvailable = await Users.findOne({ where: { email: email } });
+  if (userAvailable) {
+    return res.status(403).send({ message: "Email sudah digunakan" });
+  }
+
   if (password !== confPassword)
     return res
       .status(400)
-      .json({ msg: "Password dan Confirm Password tidak cocok" });
+      .json({ message: "Password dan Confirm Password tidak cocok" });
   const salt = await bcrypt.genSalt();
   const hashPassword = await bcrypt.hash(password, salt);
   try {
@@ -29,24 +37,32 @@ export const Register = async (req, res) => {
       email: email,
       password: hashPassword,
     });
-    res.json({ msg: "Register Berhasil" });
+    res.json({ message: "Register Berhasil" });
   } catch (error) {
     console.log(error);
   }
 };
 
 export const Login = async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res
+      .status(400)
+      .send({ message: "Email dan Password tidak boleh kosong" });
+  }
+  const user = await Users.findOne({
+    where: {
+      email: email,
+    },
+  });
+  console.log(user.email);
+  const match = await bcrypt.compare(password, user.password);
+  if (!match)
+    return res.status(400).json({ message: "Email atau Password Salah" });
   try {
-    const user = await Users.findAll({
-      where: {
-        email: req.body.email,
-      },
-    });
-    const match = await bcrypt.compare(req.body.password, user[0].password);
-    if (!match) return res.status(400).json({ msg: "Wrong Password" });
-    const userId = user[0].id;
-    const name = user[0].name;
-    const email = user[0].email;
+    const userId = user.id;
+    const name = user.name;
+    const email = user.email;
     const accessToken = jwt.sign(
       { userId, name, email },
       process.env.ACCESS_TOKEN_SECRET,
@@ -75,20 +91,22 @@ export const Login = async (req, res) => {
     });
     res.json({ accessToken });
   } catch (error) {
-    res.status(404).json({ msg: "Email tidak ditemukan" });
+    res.status(400).json({ message: "Email atau Password Salah" });
   }
 };
 
 export const Logout = async (req, res) => {
   const refreshToken = req.cookies.refreshToken;
-  if (!refreshToken) return res.sendStatus(204);
-  const user = await Users.findAll({
+  console.log(req.cookies.refreshToken);
+  if (!refreshToken) return res.status(204).send({ message: "Gagal Logout" });
+  const user = await Users.findOne({
     where: {
       refresh_token: refreshToken,
     },
   });
-  if (!user[0]) return res.sendStatus(204);
-  const userId = user[0].id;
+  // console.log(user);
+  if (!user) return res.status(400).send({ message: "Gagal Logout" });
+  const userId = user.id;
   await Users.update(
     { refresh_token: null },
     {
@@ -98,5 +116,5 @@ export const Logout = async (req, res) => {
     }
   );
   res.clearCookie("refreshToken");
-  return res.sendStatus(200);
+  return res.status(200).send({ message: "Berhasil Logout" });
 };
