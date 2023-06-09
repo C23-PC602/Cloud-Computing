@@ -1,6 +1,9 @@
 import Users from "../models/UserModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import passport from "passport";
+import { loginGoogleStrategy } from "../config/passport.js";
+// require("../config/passport.js");
 
 export const getUsers = async (req, res) => {
   try {
@@ -95,6 +98,18 @@ export const Login = async (req, res) => {
   }
 };
 
+export const LoginWithGoogle = async (req, res) => {
+  loginGoogleStrategy(passport);
+  passport.authenticate("google", { scope: ["email", "profile"] });
+};
+export const LoginWithGoogleCallback = async (req, res) => {
+  loginGoogleStrategy(passport);
+  passport.authenticate("google", {
+    successRedirect: "/protected",
+    failureRedirect: "/failure",
+  });
+};
+
 export const Logout = async (req, res) => {
   const refreshToken = req.cookies.refreshToken;
   console.log(req.cookies.refreshToken);
@@ -118,3 +133,10 @@ export const Logout = async (req, res) => {
   res.clearCookie("refreshToken");
   return res.status(200).send({ message: "Berhasil Logout" });
 };
+
+export const Protected = async (req, res) => {
+  res.send(`Hello ${req.user.displayName}`);
+};
+// app.get("/protected", isLoggedIn, (req, res) => {
+//   res.send(`Hello ${req.user.displayName}`);
+// });
