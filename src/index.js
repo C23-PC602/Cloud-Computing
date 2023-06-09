@@ -11,7 +11,6 @@ import Users from "./models/UserModel.js";
 import passport from "passport";
 dotenv.config();
 const app = express();
-app.use(passport.initialize());
 // app.use(passport.session());
 
 try {
@@ -26,6 +25,7 @@ try {
 
 // app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 app.use(cors());
+app.use(passport.initialize());
 app.use(cookieParser());
 app.use(express.json());
 app.use("/api/v1/auth", router);

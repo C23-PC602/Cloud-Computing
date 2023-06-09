@@ -137,6 +137,9 @@ export const Logout = async (req, res) => {
 export const Protected = async (req, res) => {
   res.send(`Hello ${req.user.displayName}`);
 };
+export const Test = async (req, res) => {
+  res.send({ message: "test berhasil" });
+};
 // app.get("/protected", isLoggedIn, (req, res) => {
 //   res.send(`Hello ${req.user.displayName}`);
 // });
