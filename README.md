@@ -5,7 +5,11 @@ https://documenter.getpostman.com/view/14589899/2s93m8yLLB
 
 ## URL Deploy
 
+1. For Authentication
 https://cloud-computing-eta.vercel.app/
+
+2. For Model Prediction
+https://dcoffee-hzinsvzgoq-uc.a.run.app/docs
 
 ## How to install
 
