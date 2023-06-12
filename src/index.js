@@ -1,33 +1,40 @@
-import express from "express";
-import dotenv from "dotenv";
-import cookieParser from "cookie-parser";
-import cors from "cors";
-import db from "./config/db.js";
-import router from "./routes/index.js";
-import bodyParser from "body-parser";
-
-// ini juga
-import Users from "./models/UserModel.js";
-import passport from "passport";
-dotenv.config();
+const express = require("express");
+const cookieParser = require("cookie-parser");
+const cors = require("cors");
+const db = require("./config/db");
+const passport = require("passport");
+const authRoute = require("./routes/index");
+const session = require("express-session");
+var morgan = require("morgan");
+require("dotenv").config();
+require("./config/passport-setup");
 const app = express();
-// app.use(passport.session());
+app.use(cors());
+app.use(morgan("combined"));
 
-try {
-  await db.authenticate();
-  console.log("Database Connected...");
-
-  // aktifkan ini jika mau migrasi database
-  await Users.sync();
-} catch (error) {
-  console.error(error);
-}
+const authDB = async () => {
+  try {
+    await db.authenticate();
+    console.log("Database Connected...");
+    // aktifkan ini jika mau migrasi database
+    // await Users.sync();
+  } catch (error) {
+    console.error(error);
+  }
+};
+authDB();
 
 // app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
-app.use(cors());
+// app.use(
+//   cookieSession({ name: "session", keys: ["lama"], maxAge: 24 * 60 * 60 * 100 })
+// );
+app.use(session({ secret: "cats", resave: true, saveUninitialized: true }));
 app.use(passport.initialize());
+app.use(passport.session());
 app.use(cookieParser());
 app.use(express.json());
-app.use("/api/v1/auth", router);
+app.use("/auth", authRoute);
 
-app.listen(5000, () => console.log("Server running at port 5000"));
+app.listen(process.env.PORT, () =>
+  console.log(`Server running at port ${process.env.PORT}`)
+);

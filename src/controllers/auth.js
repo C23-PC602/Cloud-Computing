@@ -1,11 +1,11 @@
-import Users from "../models/UserModel.js";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import passport from "passport";
-import { loginGoogleStrategy } from "../config/passport.js";
-// require("../config/passport.js");
+const Users = require("../models/UserModel.js");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const passport = require("passport");
+require("dotenv").config();
+require("../config/passport-setup.js");
 
-export const getUsers = async (req, res) => {
+const getUsers = async (req, res) => {
   try {
     const users = await Users.findAll({
       attributes: ["id", "name", "email"],
@@ -16,7 +16,7 @@ export const getUsers = async (req, res) => {
   }
 };
 
-export const Register = async (req, res) => {
+const register = async (req, res) => {
   const { name, email, password, confPassword } = req.body;
   if (!email || !password) {
     return res
@@ -46,7 +46,7 @@ export const Register = async (req, res) => {
   }
 };
 
-export const Login = async (req, res) => {
+const login = async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
     return res
@@ -98,21 +98,39 @@ export const Login = async (req, res) => {
   }
 };
 
-export const LoginWithGoogle = async (req, res) => {
-  loginGoogleStrategy(passport);
-  passport.authenticate("google", { scope: ["email", "profile"] });
+const loginWithGoogle = (req, res) => {
+  passport.authenticate("google", { scope: ["profile", "email"] });
 };
-export const LoginWithGoogleCallback = async (req, res) => {
-  loginGoogleStrategy(passport);
-  passport.authenticate("google", {
-    successRedirect: "/protected",
-    failureRedirect: "/failure",
-  });
+const loginWithGoogleCallback = async (req, res, next) => {
+  passport.authenticate(
+    "google",
+    {
+      // successRedirect: "/auth/google/success",
+      failureRedirect: "/auth/failure",
+    },
+
+    async (error, user, info) => {
+      if (error) {
+        return res.send({ message: error.message });
+      }
+      if (user) {
+        try {
+          // your success code
+          return res.send({
+            data: result.data,
+            message: "Login Successful",
+          });
+        } catch (error) {
+          // error msg
+          return res.send({ message: error.message });
+        }
+      }
+    }
+  )(req, res, next);
 };
 
-export const Logout = async (req, res) => {
+const logout = async (req, res) => {
   const refreshToken = req.cookies.refreshToken;
-  console.log(req.cookies.refreshToken);
   if (!refreshToken) return res.status(204).send({ message: "Gagal Logout" });
   const user = await Users.findOne({
     where: {
@@ -134,12 +152,28 @@ export const Logout = async (req, res) => {
   return res.status(200).send({ message: "Berhasil Logout" });
 };
 
-export const Protected = async (req, res) => {
+const protected = async (req, res) => {
   res.send(`Hello ${req.user.displayName}`);
 };
-export const Test = async (req, res) => {
-  res.send({ message: "test berhasil" });
+const failure = async (req, res) => {
+  res.send("Failed to authenticate..");
 };
-// app.get("/protected", isLoggedIn, (req, res) => {
+
+const test = async (req, res) => {
+  res.send('<a href="/auth/google">Authenticate with Google</a>');
+};
+// app.get("/protected", isLogged In, (req, res) => {
 //   res.send(`Hello ${req.user.displayName}`);
 // });
+
+module.exports = {
+  protected,
+  login,
+  loginWithGoogle,
+  loginWithGoogleCallback,
+  register,
+  getUsers,
+  failure,
+  test,
+  logout,
+};

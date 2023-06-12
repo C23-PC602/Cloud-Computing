@@ -1,45 +1,49 @@
-import express from "express";
-import {
+const router = require("express").Router();
+const {
   getUsers,
-  Register,
-  Login,
-  Logout,
-  LoginWithGoogle,
-  LoginWithGoogleCallback,
-  Protected,
-  Test,
-} from "../controllers/Users.js";
-import { verifyToken } from "../middleware/VerifyToken.js";
-import { refreshToken } from "../controllers/RefreshToken.js";
-import { GoogleLogin } from "../middleware/GoogleLogin.js";
+  register,
+  login,
+  logout,
+  loginWithGoogle,
+  loginWithGoogleCallback,
+  protected,
+  test,
+  failure,
+} = require("../controllers/auth.js");
+// const { verifyToken } = require("../middleware/verifyToken.js");
+// const { refreshToken } = require("../controllers/refreshToken.js");
+const { googleLogin } = require("../middleware/googleLogin.js");
 
-const router = express.Router();
+// const router = express.Router();
+// console.log(test);
 
 // Get All user
-router.get("/users", verifyToken, getUsers);
+// router.get("/users", verifyToken, getUsers);
 
 // Manual Register
-router.post("/register", Register);
+router.post("/register", register);
 
 // Manual Login After Login
-router.post("/login", Login);
+router.post("/login", login);
 
 // Google Login
-router.get("/login-google", LoginWithGoogle);
+router.get("/google", loginWithGoogle);
 
 // Google Login Callback
-router.get("/login-google/callback", LoginWithGoogleCallback);
+router.get("/google/callback", loginWithGoogleCallback);
 
 // Protected Route After Google Login
-router.get("/protected", GoogleLogin, Protected);
+router.get("/protected", googleLogin, protected);
+router.get("/failure", failure);
+// router.get("/protected", GoogleLogin, Protected);
 
 // Get Refresh Token After token Expired
-router.get("/token", refreshToken);
+// router.get("/token", refreshToken);
 
 // Test Route
-router.get("/test", Test);
+router.get("/test", test);
 
 // Logout
-router.delete("/logout", Logout);
+router.delete("/logout", logout);
 
-export default router;
+module.exports = router;
