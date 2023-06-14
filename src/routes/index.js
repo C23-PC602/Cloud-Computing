@@ -10,15 +10,11 @@ const {
   test,
   failure,
 } = require("../controllers/auth.js");
-// const { verifyToken } = require("../middleware/verifyToken.js");
-// const { refreshToken } = require("../controllers/refreshToken.js");
-const { googleLogin } = require("../middleware/googleLogin.js");
-
-// const router = express.Router();
-// console.log(test);
+const { verifyToken } = require("../middleware/verifyToken.js");
+const { refreshToken } = require("../controllers/refreshToken.js");
 
 // Get All user
-// router.get("/users", verifyToken, getUsers);
+router.get("/profile", verifyToken, getUsers);
 
 // Manual Register
 router.post("/register", register);
@@ -26,22 +22,11 @@ router.post("/register", register);
 // Manual Login After Login
 router.post("/login", login);
 
-// Google Login
-router.get("/google", loginWithGoogle);
-
-// Google Login Callback
-router.get("/google/callback", loginWithGoogleCallback);
-
-// Protected Route After Google Login
-router.get("/protected", googleLogin, protected);
-router.get("/failure", failure);
-// router.get("/protected", GoogleLogin, Protected);
-
 // Get Refresh Token After token Expired
-// router.get("/token", refreshToken);
-
-// Test Route
-router.get("/test", test);
+router.get("/token", refreshToken);
+router.get("/test", (req, res) => {
+  res.send({ meessage: "oke" });
+});
 
 // Logout
 router.delete("/logout", logout);
