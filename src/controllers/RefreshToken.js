@@ -1,5 +1,5 @@
-const Users = require("../models/UserModel.js");
-const jwt = require("jsonwebtoken");
+import Users from "../models/UserModel.js";
+import jwt from "jsonwebtoken";
 
 const refreshToken = async (req, res) => {
   try {
@@ -34,4 +34,4 @@ const refreshToken = async (req, res) => {
   }
 };
 
-module.exports = { refreshToken };
+export default refreshToken;

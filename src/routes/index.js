@@ -1,20 +1,11 @@
-const router = require("express").Router();
-const {
-  getUsers,
-  register,
-  login,
-  logout,
-  loginWithGoogle,
-  loginWithGoogleCallback,
-  protected,
-  test,
-  failure,
-} = require("../controllers/auth.js");
-const { verifyToken } = require("../middleware/verifyToken.js");
-const { refreshToken } = require("../controllers/refreshToken.js");
+import express from "express";
+import { profile, register, login, logout } from "../controllers/auth.js";
+import verifyToken from "../middleware/verifyToken.js";
+import refreshToken from "../controllers/refreshToken.js";
+const router = express.Router();
 
 // Get All user
-router.get("/profile", verifyToken, getUsers);
+router.get("/profile", verifyToken, profile);
 
 // Manual Register
 router.post("/register", register);
@@ -31,4 +22,4 @@ router.get("/test", (req, res) => {
 // Logout
 router.delete("/logout", logout);
 
-module.exports = router;
+export default router;

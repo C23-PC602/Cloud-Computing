@@ -1,10 +1,11 @@
-const express = require("express");
-const cookieParser = require("cookie-parser");
-const cors = require("cors");
-const db = require("./config/db");
-const authRoute = require("./routes/index");
-var morgan = require("morgan");
-require("dotenv").config();
+import express from "express";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+import db from "./config/db.js";
+import authRoute from "./routes/index.js";
+import morgan from "morgan";
+import dotenv from "dotenv";
+dotenv.config();
 const app = express();
 app.use(cors());
 app.use(morgan("combined"));

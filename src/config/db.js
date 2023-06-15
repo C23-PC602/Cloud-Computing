@@ -1,7 +1,7 @@
-const Sequelize = require("sequelize");
-const dotenv = require("dotenv");
+import Sequelize from "sequelize";
+import dotenv from "dotenv";
+import mysql2 from "mysql2";
 dotenv.config();
-const mysql2 = require("mysql2");
 const db = new Sequelize(
   process.env.DBNAME,
   process.env.DBUSERNAME,
@@ -12,5 +12,4 @@ const db = new Sequelize(
     dialect: "mysql",
   }
 );
-
-module.exports = db;
+export default db;

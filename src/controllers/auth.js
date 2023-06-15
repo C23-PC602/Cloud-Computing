@@ -1,9 +1,10 @@
-const Users = require("../models/UserModel.js");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-require("dotenv").config();
+import Users from "../models/UserModel.js";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
 
-const getUsers = async (req, res) => {
+const profile = async (req, res) => {
   return res.send({
     message: "Authentication Success",
     profile: req.app.locals.credential,
@@ -114,9 +115,4 @@ const logout = async (req, res) => {
   return res.status(200).send({ message: "Berhasil Logout" });
 };
 
-module.exports = {
-  login,
-  register,
-  getUsers,
-  logout,
-};
+export { register, profile, login, logout };

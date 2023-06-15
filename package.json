@@ -8,6 +8,7 @@
     "start": "node src/index.js",
     "dev": "nodemon src/index.js"
   },
+  "type": "module",
   "repository": "https://github.com/C23-PC602/Cloud-Computing.git",
   "author": "septa and hasan",
   "license": "MIT",
