@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-const verifyToken = (req, res, next) => {
+const VerifyToken = (req, res, next) => {
   if (!req.headers.authorization) {
     return res.status(401).send({ message: "Not Authenticated" });
   }
@@ -17,4 +17,4 @@ const verifyToken = (req, res, next) => {
   }
 };
 
-export default verifyToken;
+export default VerifyToken;
