@@ -6,7 +6,7 @@ https://documenter.getpostman.com/view/14589899/2s93m8yLLB
 ## URL Deploy
 
 1. For Authentication
-https://backend-dot-capstone-c23-pc602.et.r.appspot.com/
+https://backend-dot-capstone-c23-pc602.et.r.appspot.com
 
 2. For Model Prediction
 https://dcoffee-hzinsvzgoq-uc.a.run.app/docs
